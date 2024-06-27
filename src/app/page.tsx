@@ -77,33 +77,6 @@ export default function Home() {
     <>
       <div className="flex flex-col gap-[4px] py-[16px]">
         <TypographyH1>Contributions</TypographyH1>
-
-        <div className="flex gap-[12px] text-slate-900 text-base">
-          <span>
-            Current balance:
-            {(total / 100).toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}
-            &nbsp;
-            {contributions.length > 0 && (
-              <>
-                (last updated{" "}
-                {parseDate(
-                  contributions[0].submission_date.toLocaleString(),
-                  "MM/dd/yyyy"
-                )}
-                )
-              </>
-            )}
-          </span>
-        </div>
-      </div>
-
-      <Divider />
-
-      <div className="py-[16px]">
-        <AddPayment />
       </div>
 
       <Divider />

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef } from "react";
 import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import "@/app/map-component.css"; // Create this CSS file for custom styles
@@ -40,7 +42,7 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
         title: location.title,
       });
 
-      marker.addListener("click", () => {
+      marker.addListener("mouseover", () => {
         infowindow.open(map, marker);
       });
     });
@@ -51,7 +53,7 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
 
 const WrappedMap = ({ locations }: { locations: Location[] }) => {
   return (
-    <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API!}>
       <MapComponent locations={locations} />
     </LoadScript>
   );
