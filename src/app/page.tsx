@@ -40,16 +40,16 @@ export default function Home() {
 
   const locations: Location[] = [
     {
-      lng: -74.006,
-      lat: 40.7128,
-      title: "New York",
+      lng: -68.9833,
+      lat: 18.4,
+      title: "La Caleta",
       description: "The city that never sleeps.",
       image: "https://via.placeholder.com/150",
     },
     {
-      lng: -118.2437,
-      lat: 34.0522,
-      title: "Los Angeles",
+      lng: -69.6,
+      lat: 18.45,
+      title: "Boca Chica",
       description: "The entertainment capital of the world.",
       image: "https://via.placeholder.com/150",
     },

@@ -15,6 +15,33 @@ type Location = {
 const MapComponent = ({ locations }: { locations: Location[] }) => {
   const mapContainerRef = useRef(null);
 
+  async function initMap({ lat, lng }: { lat: number; lng: number }) {
+    // Request needed libraries.
+    const { Map } = (await google.maps.importLibrary(
+      "maps"
+    )) as google.maps.MapsLibrary;
+    const { AdvancedMarkerElement } = (await google.maps.importLibrary(
+      "marker"
+    )) as google.maps.MarkerLibrary;
+
+    const map = new Map(mapContainerRef.current!, {
+      center: { lat, lng },
+      zoom: 14,
+      mapId: "4504f8b37365c3d0",
+    });
+    const priceTag = document.createElement("div");
+
+    priceTag.classList.add("map-marker");
+
+    priceTag.textContent = "$2.5M";
+
+    const marker = new AdvancedMarkerElement({
+      map,
+      position: { lat, lng },
+      content: priceTag,
+    });
+  }
+
   useEffect(() => {
     if (!mapContainerRef.current) return;
 
@@ -23,28 +50,8 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
       zoom: 12,
     });
 
-    locations.forEach((location) => {
-      const contentString = `
-        <div class="custom-marker">
-          <img src="${location.image}" alt="${location.title}" />
-          <h3>${location.title}</h3>
-          <p>${location.description}</p>
-        </div>
-      `;
-
-      const infowindow = new window.google.maps.InfoWindow({
-        content: contentString,
-      });
-
-      const marker = new window.google.maps.Marker({
-        position: { lat: location.lat, lng: location.lng },
-        map,
-        title: location.title,
-      });
-
-      marker.addListener("mouseover", () => {
-        infowindow.open(map, marker);
-      });
+    locations.forEach(async (location) => {
+      initMap({ lat: location.lat, lng: location.lng });
     });
   }, [locations]);
 
