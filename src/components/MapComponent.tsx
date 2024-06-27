@@ -15,7 +15,7 @@ type Location = {
 const MapComponent = ({ locations }: { locations: Location[] }) => {
   const mapContainerRef = useRef(null);
 
-  async function initMap({ lat, lng }: { lat: number; lng: number }) {
+  async function initMap() {
     // Request needed libraries.
     const { Map } = (await google.maps.importLibrary(
       "maps"
@@ -25,20 +25,23 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
     )) as google.maps.MarkerLibrary;
 
     const map = new Map(mapContainerRef.current!, {
-      center: { lat, lng },
-      zoom: 14,
+      center: { lat: 18.483402, lng: -69.929611 },
+      zoom: 9.5,
       mapId: "4504f8b37365c3d0",
     });
-    const priceTag = document.createElement("div");
 
-    priceTag.classList.add("map-marker");
+    locations.forEach(async (location) => {
+      const priceTag = document.createElement("div");
+      priceTag.classList.add("map-marker");
+      priceTag.textContent = location.title;
 
-    priceTag.textContent = "$2.5M";
+      const marker = new AdvancedMarkerElement({
+        map,
+        position: { lat: location.lat, lng: location.lng },
+        content: priceTag,
+      });
 
-    const marker = new AdvancedMarkerElement({
-      map,
-      position: { lat, lng },
-      content: priceTag,
+      // Add any additional logic for each marker here
     });
   }
 
@@ -51,7 +54,7 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
     });
 
     locations.forEach(async (location) => {
-      initMap({ lat: location.lat, lng: location.lng });
+      initMap();
     });
   }, [locations]);
 

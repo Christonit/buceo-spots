@@ -40,6 +40,13 @@ export default function Home() {
 
   const locations: Location[] = [
     {
+      lng: -68.40431,
+      lat: 18.58182,
+      title: "Punta Cana",
+      description: "The city that never sleeps.",
+      image: "https://via.placeholder.com/150",
+    },
+    {
       lng: -68.9833,
       lat: 18.4,
       title: "La Caleta",
