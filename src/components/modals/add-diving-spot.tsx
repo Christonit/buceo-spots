@@ -29,15 +29,22 @@ function AddDivingSpot() {
   });
   const [is_disabled, setIsDisabled] = useState(false);
 
-  const { setLocations } = useContext(GlobalContext);
+  const [open, setOpen] = useState(false);
+  const context = useContext(GlobalContext);
+
+  if (!context) {
+    throw new Error("GlobalContext must be used within a GlobalProvider");
+  }
+
+  const { setLocations } = context;
+
   const postNewDivingSpot = async () => {
-    const new_collection = collection(db, "diving-spots");
     try {
+      const new_collection = collection(db, "diving-spots");
+
       const res = await addDoc(new_collection, new_diving_spot);
 
-      console.log({ res });
-
-      setLocations((prev: Location[]) => [
+      setLocations((prev) => [
         ...prev,
         {
           ...new_diving_spot,
@@ -47,13 +54,14 @@ function AddDivingSpot() {
           lng: Number(new_diving_spot.coordinates[1]),
         },
       ]);
+
+      setOpen(false);
     } catch (error) {
       console.log({ error });
     }
   };
 
   useEffect(() => {
-    console.log(new_diving_spot);
     if (
       !new_diving_spot.name ||
       !new_diving_spot.coordinates ||
@@ -70,7 +78,7 @@ function AddDivingSpot() {
   }, [new_diving_spot]);
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>+ Agregar Spot</Button>
       </DialogTrigger>

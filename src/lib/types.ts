@@ -16,4 +16,5 @@ export type Location = {
   title: string;
   description: string;
   image: string;
+  [key: string]: any;
 };

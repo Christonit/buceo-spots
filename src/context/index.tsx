@@ -1,11 +1,12 @@
 "use client";
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, ReactNode } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase";
 import { useSession } from "next-auth/react";
 import { Location } from "@/lib/types";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import db from "@/app/firestore";
+
 interface GlobalContextType {
   message: string | null;
   messageType: string;
@@ -13,7 +14,7 @@ interface GlobalContextType {
   clearMessage: () => void;
   user: { uid: string; email: string };
   locations: Location[];
-  setLocations: React.Dispatch<React.SetStateAction<Location[] | undefined>>;
+  setLocations: React.Dispatch<React.SetStateAction<Location[]>>;
 }
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(
@@ -30,16 +31,12 @@ export const GlobalProvider: React.FC<{
     uid: "",
     email: "",
   });
-
   const [locations, setLocations] = useState<Location[]>([]);
 
   const fetchDivingSpots = async () => {
     const q = query(collection(db, "diving-spots"));
-
     const res = await getDocs(q);
     const results = res.docs.map((doc) => doc.data());
-
-    console.log(1, results);
 
     const arr = results.map((location) => ({
       ...location,
@@ -47,7 +44,6 @@ export const GlobalProvider: React.FC<{
       lng: Number(location.coordinates[1]),
     }));
 
-    console.log(2, arr);
     setLocations(
       results.map((location) => ({
         ...location,
@@ -98,10 +94,9 @@ export const GlobalProvider: React.FC<{
     clearMessage,
     user,
     locations,
-    setLocations: setLocations as React.Dispatch<
-      React.SetStateAction<Location[] | undefined>
-    >,
+    setLocations,
   };
+
   return (
     <GlobalContext.Provider value={payload}>{children}</GlobalContext.Provider>
   );
