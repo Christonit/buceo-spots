@@ -5,13 +5,14 @@ import { useContext, useEffect, useState } from "react";
 import db from "./firestore";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { TypographyH1 } from "../components/ui/typography";
-import { AddPayment } from "../components/modals/add-contribution";
+import { AddPayment } from "../components/modals/add-diving-spot";
 import { ContributionI, Location } from "../lib/types";
 import ContributionsTable from "../components/ContributionsTable";
 import { GlobalContext } from "@/context";
 import Divider from "@/components/layouts/divider";
 import { parseDate } from "@/lib/utils";
 import MapComponent from "@/components/MapComponent";
+import AddDivingSpot from "@/components/modals/add-diving-spot";
 
 export default function Home() {
   const [contributions, setContributions] = useState<ContributionI[]>([]);
@@ -25,17 +26,14 @@ export default function Home() {
   //   },
   // });
 
-  const fetchContributions = async (userId: string) => {
-    const q = query(
-      collection(db, "contributions"),
-      where("user", "==", userId)
-    );
+  const fetchDivingSpots = async () => {
+    const q = query(collection(db, "diving-spots"));
 
     setDoneLoading(true);
     const res = await getDocs(q);
     const data = res.docs.map((doc) => doc.data());
 
-    setContributions(data as ContributionI[]);
+    console.log("Diving Spots", { data });
   };
 
   const locations: Location[] = [
@@ -63,7 +61,7 @@ export default function Home() {
   ];
   useEffect(() => {
     if (!user) return;
-    fetchContributions(user.uid);
+    fetchDivingSpots(user.uid);
   }, [user]);
 
   useEffect(() => {
@@ -82,11 +80,7 @@ export default function Home() {
   }, []);
   return (
     <>
-      <div className="flex flex-col gap-[4px] py-[16px]">
-        <TypographyH1>Contributions</TypographyH1>
-      </div>
-
-      <Divider />
+      <AddDivingSpot />
 
       <MapComponent locations={locations} />
     </>

@@ -12,7 +12,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en" className="h-full">
-      <body className={`h-[100vh] overflow-hidden flex ${exo_2.className}`}>
+      <body className={`h-[100vh] overflow-hidden  ${exo_2.className}`}>
         <SessionProvider>
           <GlobalProvider>
             <Navbar />

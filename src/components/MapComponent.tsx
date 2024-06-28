@@ -20,6 +20,7 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
     const { Map } = (await google.maps.importLibrary(
       "maps"
     )) as google.maps.MapsLibrary;
+
     const { AdvancedMarkerElement } = (await google.maps.importLibrary(
       "marker"
     )) as google.maps.MarkerLibrary;
@@ -28,18 +29,50 @@ const MapComponent = ({ locations }: { locations: Location[] }) => {
       center: { lat: 18.483402, lng: -69.929611 },
       zoom: 9.5,
       mapId: "4504f8b37365c3d0",
+      restriction: {
+        latLngBounds: {
+          north: 20.0,
+          south: 17.0,
+          west: -73.0,
+          east: -67.0,
+        },
+        strictBounds: false,
+      },
+      minZoom: 7,
+      maxZoom: 14,
     });
 
     locations.forEach(async (location) => {
       const priceTag = document.createElement("div");
       priceTag.classList.add("map-marker");
-      priceTag.textContent = location.title;
+      const boilerplate = `<button class='map-marker-header'>
+      <img src="${location.image}" alt="${location.title} image" />
+      <span class="map-marker-title">${location.title}</span>
+      </button>`;
+      priceTag.innerHTML = boilerplate;
 
-      const marker = new AdvancedMarkerElement({
-        map,
-        position: { lat: location.lat, lng: location.lng },
-        content: priceTag,
+      const AdvancedMarkerElement =
+        new google.maps.marker.AdvancedMarkerElement({
+          map,
+          content: priceTag,
+          position: { lat: location.lat, lng: location.lng },
+          title: location.title,
+        });
+
+      AdvancedMarkerElement.addListener("click", (e: any) => {
+        console.log("clicked", e.target);
       });
+
+      // const marker = new AdvancedMarkerElement({
+      //   map,
+      //   position: { lat: location.lat, lng: location.lng },
+      //   content: priceTag,
+      // });
+
+      // marker.addEventListener("click", (e) => {
+      //   console.log("clicked", e);
+      //   e.target!.classList.add("map-marker-active");
+      // });
 
       // Add any additional logic for each marker here
     });
