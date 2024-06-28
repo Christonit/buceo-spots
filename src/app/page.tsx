@@ -16,53 +16,9 @@ import AddDivingSpot from "@/components/modals/add-diving-spot";
 
 export default function Home() {
   const [contributions, setContributions] = useState<ContributionI[]>([]);
-  const { user } = useContext(GlobalContext) || {};
+  const { locations } = useContext(GlobalContext) || {};
   const [total, setTotal] = useState(0);
   const [doneLoading, setDoneLoading] = useState(false);
-  // useSession({
-  //   required: true,
-  //   onUnauthenticated() {
-  //     redirect("/signin");
-  //   },
-  // });
-
-  const fetchDivingSpots = async () => {
-    const q = query(collection(db, "diving-spots"));
-
-    setDoneLoading(true);
-    const res = await getDocs(q);
-    const data = res.docs.map((doc) => doc.data());
-
-    console.log("Diving Spots", { data });
-  };
-
-  const locations: Location[] = [
-    {
-      lng: -68.40431,
-      lat: 18.58182,
-      title: "Punta Cana",
-      description: "The city that never sleeps.",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      lng: -68.9833,
-      lat: 18.4,
-      title: "La Caleta",
-      description: "The city that never sleeps.",
-      image: "https://via.placeholder.com/150",
-    },
-    {
-      lng: -69.6,
-      lat: 18.45,
-      title: "Boca Chica",
-      description: "The entertainment capital of the world.",
-      image: "https://via.placeholder.com/150",
-    },
-  ];
-  useEffect(() => {
-    if (!user) return;
-    fetchDivingSpots(user.uid);
-  }, [user]);
 
   useEffect(() => {
     if (!contributions) return;
@@ -82,7 +38,7 @@ export default function Home() {
     <>
       <AddDivingSpot />
 
-      <MapComponent locations={locations} />
+      <MapComponent locations={locations || []} />
     </>
   );
 }
